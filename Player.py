@@ -18,10 +18,11 @@ class Player(object):
         self.y += gravity
 
     def jump(self):
-        self.y += 10
+        self.y += 20
 
     def check_ground(self):
-        self.y=Y-self.radius/2
+        self.y = Y - self.radius / 2 - 20
+        # 
 
     def render(self,surface):
         pos=(int(self.x),int(self.y))

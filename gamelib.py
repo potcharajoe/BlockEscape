@@ -28,8 +28,8 @@ class SimpleGame(object):
                 self.terminate()
             elif event.type == KEYDOWN:
                 self.on_key_down(event.key)
-            elif event.type ==KEYUP:
-                self.on_key_up(event.key)
+            elif event.type ==KEYUP and event.key == K_ESCAPE:
+                self.terminate()
 
     def terminate(self):
         self.is_terminated = True
