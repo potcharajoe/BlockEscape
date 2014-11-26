@@ -8,7 +8,7 @@ gamewidth = 1024
 
 class Enemy(object):
 
-	def __init__(self,color,pos,speed,rectwidth,rectheight):
+	def __init__(self,color,pos,speed,rectwidth,rectheight,addspeed=1):
 		if(random.randint(0,9)<5):
 			(self.vx,self.vy)=speed
 		else:
@@ -17,21 +17,18 @@ class Enemy(object):
 		self.rectwidth = rectwidth
 		self.rectheight = rectheight
 		self.color=color
+		self.addspeed=addspeed
 		self.rectenemy=pygame.Rect(self.x,self.y,self.rectwidth,self.rectheight)
 
-	def randommove(self):
-		if(random.randint(0,9)<5):
-			return 1
-		else:
-			return -1
 
 	def getRectenemy(self):
 		return self.rectenemy
 
-	def move(self,delta_t,clock):
 
-		self.x += self.vx*delta_t*clock
-		self.y += self.vy*delta_t*clock
+	def move(self,delta_t):
+
+		self.x += self.vx*delta_t*self.addspeed
+		self.y += self.vy*delta_t*self.addspeed
 
 
 	def change_color(self,color):

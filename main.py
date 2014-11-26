@@ -9,7 +9,6 @@ from Item import *
 from Wall import *
 
 
-
 class MonsterRunGame(gamelib.SimpleGame):
     BLACK = pygame.Color('black')
     WHITE = pygame.Color('white')
@@ -26,6 +25,7 @@ class MonsterRunGame(gamelib.SimpleGame):
         self.enemies=[]
         self.item=Item(pos=(random.randint(10,1014),random.randint(10,710)))
         self.score = 0
+        self.gameover = False
 
         for i in range(0,6):            
             enemy = Enemy(color=MonsterRunGame.GREEN,pos=(random.randrange(20,800,80),random.randrange(20,500,80)),speed=(100,50),rectwidth=random.randrange(30,120),rectheight=random.randrange(30,120))
@@ -37,28 +37,48 @@ class MonsterRunGame(gamelib.SimpleGame):
 
     def update(self):
 
-        for enemy in self.enemies:
-            enemy.update()
-            enemy.move(1./self.fps,pygame.time.get_ticks()/1000)
+        if(self.is_key_pressed(K_RETURN)):
+            self.hero.resetpos(self.surface)
 
-            if(enemy.getRectenemy().colliderect(self.topwall.getRectwall()) and enemy.y<5 ):
-                enemy.y = 1
-                enemy.moveinverseone()
-            elif (enemy.getRectenemy().colliderect(self.bottomwall.getRectwall()) and (enemy.y>715-enemy.rectheight)):
-                enemy.y = 719-enemy.rectheight
-                print "collision"
-                enemy.moveinverseone()
+        
+        if(self.hero.checkplayer(self.surface)==None or self.is_key_pressed(K_RETURN)) :        
+            
+            if(not(self.gameover) or (pygame.time.get_ticks())/1000<2):
 
+                for enemy in self.enemies:
+                    enemy.update()
+                    enemy.move(1./self.fps)
 
-        if self.is_key_pressed(K_UP):
-            self.hero.move_up()
-        elif self.is_key_pressed(K_DOWN):
-            self.hero.move_down()
-        elif self.is_key_pressed(K_LEFT):
-            self.hero.move_left()
-        elif self.is_key_pressed(K_RIGHT):
-            self.hero.move_right()
-        print pygame.time.get_ticks()/1000
+                    if(enemy.getRectenemy().colliderect(self.topwall.getRectwall()) and enemy.y<5 ):
+                        enemy.y = 1
+                        enemy.moveinverseone()
+                    elif (enemy.getRectenemy().colliderect(self.bottomwall.getRectwall()) and (enemy.y>715-enemy.rectheight)):
+                        enemy.y = 719-enemy.rectheight
+                        enemy.moveinverseone()
+                    elif (enemy.getRectenemy().colliderect(self.leftwall.getRectwall()) and (enemy.x<5)):
+                        enemy.x = 1
+                        enemy.moveinversetwo()
+                    elif (enemy.getRectenemy().colliderect(self.rightwall.getRectwall()) and (enemy.x>1019-enemy.rectwidth)):
+                        enemy.x = 1023-enemy.rectwidth
+                        enemy.moveinversetwo()
+
+                    if(enemy.getRectenemy().colliderect(self.hero.getRecthero())):
+                        self.gameover = True
+
+                    if((pygame.time.get_ticks())/1000%5 == 0):
+                        enemy.addspeed+=0.05
+
+                    if self.is_key_pressed(K_UP):
+                        self.hero.move_up()
+                    elif self.is_key_pressed(K_DOWN):
+                        self.hero.move_down()
+                    elif self.is_key_pressed(K_LEFT):
+                        self.hero.move_left()
+                    elif self.is_key_pressed(K_RIGHT):
+                        self.hero.move_right()
+
+        self.hero.update()
+        # print pygame.time.get_ticks()/1000
 
         
     def render_score(self):
