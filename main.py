@@ -23,9 +23,10 @@ class MonsterRunGame(gamelib.SimpleGame):
         self.rightwall=Wall(pos=(self.window_size[0],0),width=1,height=self.window_size[1],color=MonsterRunGame.WHITE)
         self.leftwall=Wall(pos=(-1,0),width=1,height=self.window_size[1],color=MonsterRunGame.WHITE)
         self.enemies=[]
-        self.item=Item(pos=(random.randint(10,1014),random.randint(10,710)))
+        self.item=Item(pos=(random.randint(10,1014),random.randint(10,710)),color=MonsterRunGame.WHITE)
         self.score = 0
         self.gameover = False
+        self.plusscore = False
 
         for i in range(0,6):            
             enemy = Enemy(color=MonsterRunGame.GREEN,pos=(random.randrange(20,800,80),random.randrange(20,500,80)),speed=(100,50),rectwidth=random.randrange(30,120),rectheight=random.randrange(30,120))
@@ -39,6 +40,9 @@ class MonsterRunGame(gamelib.SimpleGame):
 
         if(self.is_key_pressed(K_RETURN)):
             self.hero.resetpos(self.surface)
+            pygame.time.reset()
+            self.gameover=False
+            self.score=0
 
         
         if(self.hero.checkplayer(self.surface)==None or self.is_key_pressed(K_RETURN)) :        
@@ -65,6 +69,12 @@ class MonsterRunGame(gamelib.SimpleGame):
                     if(enemy.getRectenemy().colliderect(self.hero.getRecthero())):
                         self.gameover = True
 
+                    if(self.hero.getRecthero().colliderect(self.item.getRectitem())):
+                        
+                        self.item.randomspawn(self.surface)
+                        self.score+=1
+                        self.render_score()
+
                     if((pygame.time.get_ticks())/1000%5 == 0):
                         enemy.addspeed+=0.05
 
@@ -76,9 +86,8 @@ class MonsterRunGame(gamelib.SimpleGame):
                         self.hero.move_left()
                     elif self.is_key_pressed(K_RIGHT):
                         self.hero.move_right()
-
+        self.item.update()
         self.hero.update()
-        # print pygame.time.get_ticks()/1000
 
         
     def render_score(self):
