@@ -15,13 +15,14 @@ class Item(object):
 		self.rectitem=pygame.Rect(self.x,self.y,self.width,self.height)
 
 	def randomspawn(self,display):
+		global score_debounce
 		self.x = random.randint(0,display.get_width()-self.width)
 		self.y = random.randint(0,display.get_height()-self.height)
+		
 
 
 	def render(self,surface):
 		pos = (int(self.x),int(self.y))
-		pygame.draw.rect(surface,self.color,self.rectitem,1)
 		surface.blit(self.image,pos)
 
 	def getRectitem(self):

@@ -11,6 +11,7 @@ class Hero(object):
 		self.herowidth=herowidth
 		self.heroheight=heroheight
 		self.recthero=pygame.Rect(self.x-self.radius,self.y-self.radius,self.herowidth,self.heroheight)
+		self.herospeed = 2
 
 	def getX(self):
 		return self.x
@@ -19,16 +20,16 @@ class Hero(object):
 		return self.y
 
 	def move_right(self):
-		self.x += 5
+		self.x += self.herospeed
 
 	def move_left(self):
-		self.x -= 5
+		self.x -= self.herospeed
 
 	def move_up(self):
-		self.y -= 5
+		self.y -= self.herospeed
 
 	def move_down(self):
-		self.y += 5
+		self.y += self.herospeed
 
 	def resetspeed(self):
 		self.vx=0
@@ -52,7 +53,6 @@ class Hero(object):
 	def render(self,surface):
 		pos = (int(self.x),int(self.y))
 		pygame.draw.circle(surface,self.color,pos,self.radius,0)
-		pygame.draw.rect(surface,self.color,self.recthero,1)
 
 	def getRecthero(self):
 
